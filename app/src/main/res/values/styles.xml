@@ -1,0 +1,21 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <style name="Custom" parent="android:Theme.Dialog">
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Large</item>
+        <item name="DialogTitleText">...PLEASE   WAIT...</item>
+        <item name="android:fontFamily">@font/bellerose</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="DialogSpotColor">@color/colorBackGround</item>
+        <item name="DialogSpotCount">15</item>
+
+    </style>
+</resources>

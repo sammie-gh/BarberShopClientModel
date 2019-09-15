@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "8020783559",
+    "firebase_url": "https://barbershopmanager-71d3d.firebaseio.com",
+    "project_id": "barbershopmanager-71d3d",
+    "storage_bucket": "barbershopmanager-71d3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8020783559:android:e73798f4864068d3",
+        "android_client_info": {
+          "package_name": "com.sammie.barbershopclientmodel"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8020783559-8ia4llnvr53f806fcjhltn9agqu35ccr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sammie.barbershopclientmodel",
+            "certificate_hash": "d9b42785f5db4fea7bbd8b15674d349d892deaa5"
+          }
+        },
+        {
+          "client_id": "8020783559-823ndku6rite74dpv4bu7llnf8gft9ea.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8Ks0YsWla2nPordFpmqEYJXdmIl2x-go"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8020783559-823ndku6rite74dpv4bu7llnf8gft9ea.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

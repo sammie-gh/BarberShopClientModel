@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackGround"
+    android:orientation="vertical"
+    tools:context=".BookingActivity">
+
+    <com.shuhart.stepview.StepView
+        android:id="@+id/step_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        app:sv_animationType="None"
+        app:sv_doneCircleColor="@color/colorAccent"
+        app:sv_doneStepLineColor="@color/colorAccent"
+        app:sv_doneStepMarkColor="@android:color/white"
+        app:sv_doneTextColor="@android:color/white"
+        app:sv_selectedCircleColor="@color/colorButton"
+        app:sv_selectedStepNumberColor="@android:color/white"
+        app:sv_selectedTextColor="@color/colorButton"
+        app:sv_stepPadding="12dp"
+        app:sv_typeface="@font/bellerose" />
+
+
+    <com.sammie.barbershopclientmodel.Common.NonSwipeViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/layout_button"
+        android:layout_below="@id/step_view" />
+
+    <LinearLayout
+        android:id="@+id/layout_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:weightSum="2">
+
+        <Button
+            android:layout_width="0dp"
+            android:id="@+id/btn_previous"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:background="@color/colorButton"
+            android:layout_height="wrap_content"
+            android:enabled="false"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/bellerose"
+            android:text="Previous" />
+
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:textColor="@android:color/white"
+            android:background="@color/colorButton"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_next"
+            android:layout_marginStart="4dp"
+            android:fontFamily="@font/bellerose"
+            android:text="Next" />
+
+
+    </LinearLayout>
+</RelativeLayout>
