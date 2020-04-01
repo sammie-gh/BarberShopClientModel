@@ -1,11 +1,28 @@
 package com.sammie.barbershopclientmodel.Common;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.os.Build;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.sammie.barbershopclientmodel.Model.Barber;
 import com.sammie.barbershopclientmodel.Model.BookingInformation;
+import com.sammie.barbershopclientmodel.Model.MyToken;
 import com.sammie.barbershopclientmodel.Model.Salon;
-import com.sammie.barbershopclientmodel.Model.TimeSlot;
 import com.sammie.barbershopclientmodel.Model.User;
+import com.sammie.barbershopclientmodel.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,7 +34,7 @@ public class Common {
     public static final String KEY_DISPLAY_TIME_SLOT = "DISPLAY_TIME_SLOT" ;
     public static final String KEY_STEP ="STEP" ;
     public static final String KEY_BARBER_SELECTED =  "BARBER_SELECTED" ;
-    public static final int TIME_SLOT_TOTAL = 20;
+    public static final int TIME_SLOT_TOTAL = 21;
     public static final Object DISABLE_TAG ="DISABLE" ;
     public static final String KEY_TIME_SLOT = "TIME_SLOT";
     public static final String KEY_CONFIRM_BOOKING = "CONFIRM_BOOKING" ;
@@ -28,7 +45,8 @@ public class Common {
     public static int step = 0;
     public static String city = "";
     public static final  String KEY_BARBER_LOAD_DONE = "BARBER_LOAD_DONE";
-
+    public static final String TITLE_KEY = "title";
+    public static final String CONTENT_TYPE = "content";
     public static Barber currentBarber;
     public static int currentTimeSlot = -1;
     public static Calendar bookingDate = Calendar.getInstance();
@@ -36,6 +54,22 @@ public class Common {
     public static BookingInformation currentBooking;
     public static String currentBookingId = "";
 
+    //sldepay
+    public static String MERCHANT_KEY = "1522254751831";
+    // email or mobile number associated with the merchant account
+    public static String EMAIL_OR_MOBILE_NUMBER = "ofori.d.evans@gmail.com";
+    // callback url
+    //    public static String CALLBACK_URL = "https://www.slydepay.com.gh/";
+//    public static String CALLBACK_URL = "https://webhook.site/#!/25091d9b-4752-44f0-90bf-d6fde4012423/634cd837-794f-41d7-856f-425388cebfe7/1";
+    public static String CALLBACK_URL = "https://webhook.site/25091d9b-4752-44f0-90bf-d6fde4012423";
+
+
+
+
+    public class RequestCode {
+        public static final int IMPORT = 9999;
+        public static final int WRITE_PERMISSION = 101;
+    }
     public static String convertTimeSlotToString(int slot) {
         switch (slot)
         {
@@ -79,7 +113,8 @@ public class Common {
                 return "18:00-18:30";
             case 19:
                 return "18:30-19:00";
-
+            case 20:
+                return "19:30-20:00";
                 default: return "closed";
 
         }
@@ -87,10 +122,58 @@ public class Common {
 
     public static String convertTimeStampToStringKey(Timestamp timestamp) {
         Date data = timestamp.toDate();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("DD_MM_yyyy");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd_MM_yyyy");
         return simpleDateFormat.format(data);
 
     }
+
+    public enum TOKEN_TYPE {
+        CLIENT,
+        BARBER,
+        MANAGER,
+    }
+
+    public static void showNotification(Context context, int notification_id, String title, String content, Intent intent) {
+
+        PendingIntent pendingIntent = null;
+        if (intent != null)
+            pendingIntent = PendingIntent.getActivity(context,
+                    notification_id,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        String NOTIFICATION_CHANNEL_ID = "medi_app_client_o1";
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                    "Medi App Booking Client App", NotificationManager.IMPORTANCE_DEFAULT);
+
+            notificationChannel.setDescription("Staff App");
+            notificationChannel.enableLights(true);
+            notificationChannel.enableVibration(true);
+
+            notificationManager.createNotificationChannel(notificationChannel);
+
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID);
+
+
+        builder.setContentTitle(title)
+                .setContentText(content)
+                .setAutoCancel(false)
+                .setSmallIcon(R.drawable.ic_local_hospital_red_24dp)
+                .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_local_hospital_red_24dp));
+
+        if (pendingIntent != null)
+            builder.setContentIntent(pendingIntent);
+        Notification notification = builder.build();
+
+        notificationManager.notify(notification_id,notification );
+
+
+    }
+
 
     public static String formatShoppingItemName(String name) {
 
@@ -98,4 +181,57 @@ public class Common {
                 .toString():name;
 
     }
+    public static void updateToken( String token) {
+
+        FirebaseAuth s = FirebaseAuth.getInstance();
+
+        if (s.getCurrentUser()  != null) {
+            MyToken myToken = new MyToken();
+            myToken.setToken(token);
+            myToken.setTokenType(TOKEN_TYPE.CLIENT); //cox code run from babrber staff app
+            myToken.setUid(s.getUid());
+
+            FirebaseFirestore.getInstance()
+                    .collection("Tokens")
+                    .document(s.getUid())
+                    .set(myToken)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                        }
+                    });
+
+        }
+
+
+
+
+//        //First check if login
+//        Paper.init(context);
+//        String user = Paper.book().read(Common.LOGGED_KEY);
+//        if (user != null) {
+//            if (!TextUtils.isEmpty(user)) {
+//                MyToken myToken = new MyToken();
+//                myToken.setToken(token);
+//                myToken.setTokenType(TOKEN_TYPE.BARBER); //cox code run from babrber staff app
+//                myToken.setUser(user);
+//
+//                //submit on Firestore
+//                FirebaseFirestore.getInstance()
+//                        .collection("Tokens")
+//                        .document(user)
+//                        .set(myToken)
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//
+//                            }
+//                        });
+//
+//
+//            }
+//        }
+    }
+
 }

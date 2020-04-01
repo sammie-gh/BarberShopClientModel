@@ -22,6 +22,7 @@
         app:sv_selectedStepNumberColor="@android:color/white"
         app:sv_selectedTextColor="@color/colorButton"
         app:sv_stepPadding="12dp"
+        app:sv_textSize="18sp"
         app:sv_typeface="@font/bellerose" />
 
 

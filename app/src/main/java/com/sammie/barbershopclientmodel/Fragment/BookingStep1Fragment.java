@@ -1,16 +1,17 @@
 package com.sammie.barbershopclientmodel.Fragment;
 
-import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,8 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import dmax.dialog.SpotsDialog;
-import es.dmoral.toasty.Toasty;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class BookingStep1Fragment extends Fragment implements IAllSalonLoadListener, IBranchLoadListener {
 
@@ -51,7 +51,7 @@ public class BookingStep1Fragment extends Fragment implements IAllSalonLoadListe
     @BindView(R.id.recycler_salon)
     RecyclerView recycler_salon;
 
-    AlertDialog alertDialog;
+    SweetAlertDialog alertDialog;
     Unbinder unbinder;
 
 
@@ -72,8 +72,11 @@ public class BookingStep1Fragment extends Fragment implements IAllSalonLoadListe
         iAllSalonLoadListener = this;
         iBranchLoadListener = this;
 
-        alertDialog = new SpotsDialog.Builder().setContext(getActivity()).setTheme(R.style.Custom)
-                .setCancelable(false).build();
+        alertDialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        alertDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        alertDialog.setTitleText("Loading");
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCancelable(false);
     }
 
     @Nullable
@@ -104,7 +107,7 @@ public class BookingStep1Fragment extends Fragment implements IAllSalonLoadListe
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             List<String> list = new ArrayList<>();
-                            list.add("Please choose city");
+                            list.add("Please choose a Department");
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult())
                                 list.add(documentSnapshot.getId());
                             iAllSalonLoadListener.onAllSalonLoadSuccess(list);

@@ -1,11 +1,8 @@
 package com.sammie.barbershopclientmodel.Adapter;
 
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentContainer;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.view.View;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.sammie.barbershopclientmodel.Fragment.BookingStep1Fragment;
 import com.sammie.barbershopclientmodel.Fragment.BookingStep2Fragment;

@@ -2,15 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorBackGround"
     android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+<!--    <ImageView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:src="@drawable/logo"-->
+<!--        android:contentDescription="TODO" />-->
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lotiie_animation"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/logo"
-        android:contentDescription="TODO" />
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="calendar_check_out.json"
+        app:lottie_loop="true" />
 
 
     <LinearLayout
@@ -36,6 +48,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/bellerose"
             android:text="Booking Information"
+            android:padding="5dp"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
@@ -51,16 +64,16 @@
                 android:layout_gravity="bottom"
                 android:src="@drawable/ic_event_note_black_24dp" />
 
-
+            <!--            android:text="10h00 at 28/03/2019"-->
             <TextView
                 android:id="@+id/txt_booking_time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:fontFamily="@font/bellerose"
-                android:text="10h00 at 28/03/2019"
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="17sp" />
+
 
         </LinearLayout>
 
@@ -73,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:src="@drawable/ic_account_circle_custom" />
+                android:src="@drawable/ic_consult_doctor" />
 
 
             <TextView
@@ -82,9 +95,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:fontFamily="@font/bellerose"
-                android:text="David"
+                android:text=""
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="17sp" />
 
         </LinearLayout>
 
@@ -99,11 +112,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/bellerose"
-            android:text="salon #1"
+            android:text="Case"
+            android:drawablePadding="5dp"
+            android:drawableStart="@drawable/ic_health_insurance"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
-
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:background="@android:color/background_dark" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -124,7 +143,7 @@
                 android:fontFamily="@font/bellerose"
                 android:text=""
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="17sp" />
 
         </LinearLayout>
 
@@ -146,9 +165,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="4dp"
                 android:fontFamily="@font/bellerose"
-                android:text="0544184738"
+                android:text=""
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="17sp" />
 
         </LinearLayout>
 
@@ -172,7 +191,7 @@
                 android:fontFamily="@font/bellerose"
                 android:text=""
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="17sp" />
 
         </LinearLayout>
 
@@ -192,15 +211,16 @@
                 android:id="@+id/txt_salona_ddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
+                android:layout_marginStart="4dp"
                 android:fontFamily="@font/bellerose"
-                android:text="address of salon #1"
+                android:text=""
                 android:textColor="@android:color/white"
-                android:textSize="14sp" />
+                android:textSize="17sp" />
 
 
         </LinearLayout>
 
+<!--        android:text="CONFIRM"-->
         <Button
             android:id="@+id/btn_confirm"
             android:layout_width="match_parent"
@@ -208,7 +228,7 @@
             android:layout_marginTop="8dp"
             android:background="@color/colorButton"
             android:fontFamily="@font/bellerose"
-            android:text="CONFIRM"
+            android:text="Poceed to payment"
             android:textColor="@android:color/white" />
 
     </LinearLayout>

@@ -1,21 +1,24 @@
 package com.sammie.barbershopclientmodel.Fragment;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,6 +36,7 @@ import com.sammie.barbershopclientmodel.Interface.ITimeSlotLoadListener;
 import com.sammie.barbershopclientmodel.Model.TimeSlot;
 import com.sammie.barbershopclientmodel.R;
 
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,29 +45,31 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import devs.mulham.horizontalcalendar.HorizontalCalendar;
-import devs.mulham.horizontalcalendar.HorizontalCalendarView;
 import devs.mulham.horizontalcalendar.utils.HorizontalCalendarListener;
-import dmax.dialog.SpotsDialog;
 import es.dmoral.toasty.Toasty;
+
+import static com.sammie.barbershopclientmodel.Common.Common.simpleDateFormat;
 
 public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListener {
     //variable
-    DocumentReference barberDoc;
-    ITimeSlotLoadListener iTimeSlotLoadListener;
-    AlertDialog dialog;
+    private DocumentReference barberDoc;
+    private ITimeSlotLoadListener iTimeSlotLoadListener;
+    private SweetAlertDialog dialog;
     Unbinder unbinder;
-    LocalBroadcastManager localBroadcastManager;
-
-
+    private LocalBroadcastManager localBroadcastManager;
 
     @BindView(R.id.recycler_time_slot)
     RecyclerView recycler_time_slot;
-    @BindView(R.id.calenderView)
-    HorizontalCalendarView calendarView;
-    SimpleDateFormat simpleDateFormat;
 
-    BroadcastReceiver displayTimeSlot = new BroadcastReceiver() {
+    @BindView(R.id.txt_current_date)
+    TextView currentDate;
+//    @BindView(R.id.calenderView)
+//    HorizontalCalendarView calendarView;
+//    private SimpleDateFormat simpleDateFormat;
+
+    private BroadcastReceiver displayTimeSlot = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Calendar date = Calendar.getInstance();
@@ -155,8 +161,12 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
         localBroadcastManager.registerReceiver(displayTimeSlot, new IntentFilter(Common.KEY_DISPLAY_TIME_SLOT));
 
         simpleDateFormat = new SimpleDateFormat("dd_MM_yyyy");// this is a key
-        dialog = new SpotsDialog.Builder().setContext(getActivity()).setTheme(R.style.Custom)
-                .setCancelable(false).build();
+
+        dialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        dialog.setTitleText("Loading");
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
 
 //        Common.bookingDate = Calendar.getInstance();
 //        Common.bookingDate.add(Calendar.DATE, 0);  //init current date
@@ -174,7 +184,7 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreateView(inflater,container,savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
         View itemview = inflater.inflate(R.layout.fragment_booking_step_three, container, false);
 
         unbinder = ButterKnife.bind(this, itemview);
@@ -193,13 +203,12 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
         //calender
         Calendar startDate = Calendar.getInstance();
         startDate.add(Calendar.DATE, 0);
-
         Calendar endDate = Calendar.getInstance();
-        endDate.add(Calendar.DATE, 2); // 2 days left
+        endDate.add(Calendar.DATE, 7); //   days left user can book
 
         HorizontalCalendar horizontalCalendar = new HorizontalCalendar.Builder(itemview, R.id.calenderView)
                 .range(startDate, endDate)
-                .datesNumberOnScreen(1)
+                .datesNumberOnScreen(5)
                 .mode(HorizontalCalendar.Mode.DAYS)
                 .defaultSelectedDate(startDate)
                 .build();
@@ -215,6 +224,21 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
             }
         });
 
+        currentDate.setText(MessageFormat.format("Current Booking date is {0}", DateFormat.format("EEE, MMM d, yyyy", startDate).toString()));
+
+        horizontalCalendar.setCalendarListener(new HorizontalCalendarListener() {
+            @Override
+            public void onDateSelected(Calendar date, int position) {
+                String selectedDateStr = DateFormat.format("EEE, MMM d, yyyy", date).toString();
+                currentDate.setText(MessageFormat.format("Current Booking date is {0}", selectedDateStr));
+
+                if (Common.bookingDate.getTimeInMillis() != date.getTimeInMillis()) {
+                    Common.bookingDate = date; // this code will not load again if you select new
+                    loadAvailableTimeSlotofBarber(Common.currentBarber.getBarberId(),
+                            Common.simpleDateFormat.format(date.getTime()));
+                }
+            }
+        });
 
     }
 

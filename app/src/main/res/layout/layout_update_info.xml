@@ -6,41 +6,133 @@
     android:orientation="vertical"
     android:padding="8dp">
 
-    <android.support.design.widget.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/bellerose"
+            android:hint="Please enter your name"
             android:inputType="text"
-            android:textStyle="bold"
-            android:textSize="20sp"
             android:maxEms="15"
-            android:hint="Please enter your name" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
 
-    </android.support.design.widget.TextInputLayout>
-    <android.support.design.widget.TextInputLayout
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
 
-        <android.support.design.widget.TextInputEditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edt_address"
             android:layout_width="match_parent"
-            android:textStyle="bold"
             android:layout_height="wrap_content"
             android:fontFamily="@font/bellerose"
-            android:textSize="20sp"
+            android:hint="Please enter your adress"
             android:inputType="text"
-            android:hint="Please enter your adress" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
 
-    </android.support.design.widget.TextInputLayout>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bellerose"
+            android:hint="Your phone"
+            android:inputType="phone"
+            android:maxLength="10"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_next_kin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bellerose"
+            android:hint="Next Kin"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_gender"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/bellerose"
+            android:hint="Your gender"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_date_birth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:fontFamily="@font/bellerose"
+            android:hint="Click to set your date of birth"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/txt_age"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:focusable="false"
+            android:fontFamily="@font/bellerose"
+            android:hint="age"
+            android:inputType="text"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/btn_update"
@@ -48,6 +140,7 @@
         android:layout_height="wrap_content"
         android:background="@color/colorButton"
         android:fontFamily="@font/bellerose"
-        android:textColor="@android:color/white"
-        android:text="Update info" />
+        android:text="Update info"
+        android:textColor="@android:color/white" />
+
 </LinearLayout>

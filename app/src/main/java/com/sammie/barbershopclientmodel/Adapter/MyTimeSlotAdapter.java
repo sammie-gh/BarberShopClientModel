@@ -2,22 +2,21 @@ package com.sammie.barbershopclientmodel.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.sammie.barbershopclientmodel.Common.Common;
 import com.sammie.barbershopclientmodel.Interface.IRecyclerItemSelectedListener;
 import com.sammie.barbershopclientmodel.Model.TimeSlot;
 import com.sammie.barbershopclientmodel.R;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +72,7 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
                     myViewHolder.card_time_slot.setTag(Common.DISABLE_TAG);
                     myViewHolder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
 
-                    myViewHolder.txt_time_slot_description.setText("Full");
+                    myViewHolder.txt_time_slot_description.setText("BOOKED");
                     myViewHolder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.white));
                     myViewHolder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.white));
 

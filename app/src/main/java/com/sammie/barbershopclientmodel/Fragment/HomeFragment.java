@@ -1,33 +1,36 @@
 package com.sammie.barbershopclientmodel.Fragment;
 
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.accountkit.AccountKit;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -51,6 +54,7 @@ import com.sammie.barbershopclientmodel.Model.BookingInformation;
 import com.sammie.barbershopclientmodel.R;
 import com.sammie.barbershopclientmodel.Service.PicassoImageLoadingService;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -60,7 +64,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import dmax.dialog.SpotsDialog;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import es.dmoral.toasty.Toasty;
 import io.paperdb.Paper;
 import ss.com.bannerslider.Slider;
@@ -91,7 +95,20 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     TextView txt_salon_barber;
     @BindView(R.id.txt_time_remain)
     TextView txt_time_remain;
-    AlertDialog dialog;
+    @BindView(R.id.lotiie_animation)
+    LottieAnimationView lotiie_animation;
+    @BindView(R.id.txt_book_info)
+    TextView txt_book_info;
+
+    @BindView(R.id.txt_phone)
+    TextView txt_phone;
+    @BindView(R.id.txt_membership_id_number)
+    TextView txt_membership_id_number;
+    @BindView(R.id.img_user)
+    ImageView img_user;
+
+    private SweetAlertDialog dialog;
+
     //Firetsore
     CollectionReference bannerRef, lookBookRef;
     //interface
@@ -99,6 +116,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     ILookBookLoadlistener iLookBookLoadlistener;
     IBookingInfoLoadListener iBookingInfoLoadListener;
     IBookingInformationChangeListener iBookingInformationChangeListener;
+    private FirebaseAuth mAuth;
     private Unbinder unbinder;
 
     public HomeFragment() {
@@ -121,7 +139,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
     private void changeBookingFromUser() {
         //show dialog
-        android.support.v7.app.AlertDialog.Builder confirmDialog = new android.support.v7.app.AlertDialog
+        androidx.appcompat.app.AlertDialog.Builder confirmDialog = new androidx.appcompat.app.AlertDialog
                 .Builder(getActivity())
                 .setCancelable(false)
                 .setTitle("Hey!")
@@ -145,27 +163,29 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     }
 
     private void deleteBookingFromBarber(final boolean isChange) {
-        /* to deleet we need to delete from babrber collectio
+
+        /* to deleet we need to delete from babrber collection
          * userbooking colletion
          * final event calandar*/
         //we need to load Common.currentBookg coz we need some data from booking infrmation
 
         if (Common.currentBooking != null) {
+            if (!dialog.isShowing())
+                dialog.show();
 
-            dialog.show();
-
+            //AllSalon/Ho/Branch/IW9io42puOugPB5do2rj/Barbers/H1fXpNpzFt0FH28mUpTr/29_03_2020
+            //AllSalon/Ho/Branch/IW9io42puOugPB5do2rj/Barbers/H1fXpNpzFt0FH28mUpTr/21_05_2019
             DocumentReference barberBookingInfo = FirebaseFirestore.getInstance()
-
                     .collection("AllSalon")
                     .document(Common.currentBooking.getCityBook())
                     .collection("Branch")
                     .document(Common.currentBooking.getSalonId())
-                    .collection("Barber")
+                    .collection("Barbers")
                     .document(Common.currentBooking.getBarberId())
                     .collection(Common.convertTimeStampToStringKey(Common.currentBooking.getTimestamp()))
-                    .document(Common.currentBooking.getSalonId().toString());
+                    .document(Common.currentBooking.getSlot().toString());
 
-            //when we have document justr delete it
+            //when we have document just delete it
             barberBookingInfo.delete().addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
@@ -190,7 +210,8 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         //get alll info from user object
         if (!TextUtils.isEmpty(Common.currentBookingId)) {
             DocumentReference userBookingInfo = FirebaseFirestore.getInstance()
-                    .collection("User")
+                    .collection("Users")
+//                    .document(mAuth.getUid())
                     .document(Common.currentUser.getPhoneNumber())
                     .collection("Booking")
                     .document(Common.currentBookingId);
@@ -207,9 +228,16 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
                     //after we delete from user databse we delete from calander
                     Paper.init(getActivity());
-                    Uri eventUri = Uri.parse(Paper.book().read(Common.EVENT_URI_CACHE).toString());
-                    getActivity().getContentResolver().delete(eventUri, null, null);
+                    if (Paper.book().read(Common.EVENT_URI_CACHE) != null) {
+                        String eventString = Paper.book().read(Common.EVENT_URI_CACHE).toString();
+                        Uri eventUri = null;
+                        if (eventString != null && !TextUtils.isEmpty(eventString))
+                            eventUri = Uri.parse(eventString);
 
+                        if (eventUri != null)
+                            getActivity().getContentResolver().delete(eventUri, null, null);
+
+                    }
                     Toasty.success(getActivity(), "Success delete booking", Toast.LENGTH_SHORT).show();
 
                     //Refresh
@@ -234,7 +262,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     }
 
     @OnClick(R.id.card_view_cart)
-    void openCartActivity(){
+    void openCartActivity() {
         startActivity(new Intent(getActivity(), CartActivity.class));
     }
 
@@ -248,7 +276,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
     private void loadUserBooking() {
         CollectionReference userBooking = FirebaseFirestore.getInstance()
-                .collection("User")
+                .collection("Users")
                 .document(Common.currentUser.getPhoneNumber())
                 .collection("Booking");
 
@@ -296,9 +324,14 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
 
-        dialog = new SpotsDialog.Builder().setContext(getContext()).setTheme(R.style.Custom)
-                .setCancelable(false).build();
+        dialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        dialog.setTitleText("Loading");
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+
     }
 
     @Override
@@ -319,7 +352,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
 
         //checked if logged
-        if (AccountKit.getCurrentAccessToken() != null) {
+        if (mAuth.getCurrentUser() != null) {
             setUserInformation();
             loadBanner();
             loadLookBook();
@@ -387,9 +420,36 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
     private void setUserInformation() {
         layout_user_info.setVisibility(View.VISIBLE);
-        txt_userName.setText(Common.currentUser.getName());
-    }
+        txt_userName.setText(Common.currentUser.getName()); //save to sharedprerence or save instace to prevent crash
+        txt_phone.setText(MessageFormat.format("phone :{0}", Common.currentUser.getPhoneNumber()));
+        txt_membership_id_number.setText(MessageFormat.format("ID: {0}", Common.currentUser.getIdNumber()));
 
+        img_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("You are about to signOut !")
+                        .setContentText("Click Ok to logout or cancel dismiss")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                                mAuth.signOut();
+                                getActivity().finish();
+                            }
+                        })
+                        .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                            }
+                        })
+                        .show();
+
+
+            }
+        });
+    }
 
     @Override
     public void onBannerLoadSuccess(List<Banner> banners) {
@@ -427,7 +487,8 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     @Override
     public void onBookingInfoLoadEmpty() {
         card_booking_info.setVisibility(View.GONE);
-
+        lotiie_animation.setVisibility(View.VISIBLE);
+        txt_book_info.setText("Your Current Booking is Displayed Here ");
     }
 
     @Override
@@ -446,7 +507,9 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
         txt_time_remain.setText(dateRemain);
 
+        txt_book_info.setText("You have as Appointment NB:A Reminder \nNotification As time approaches will be sent from your calendar");
         card_booking_info.setVisibility(View.VISIBLE);
+        lotiie_animation.setVisibility(View.GONE);
 
 
         dialog.dismiss();

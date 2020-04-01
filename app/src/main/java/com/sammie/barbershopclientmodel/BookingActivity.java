@@ -1,18 +1,21 @@
 package com.sammie.barbershopclientmodel;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.annotation.NonNull;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,13 +36,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import dmax.dialog.SpotsDialog;
-import es.dmoral.toasty.Toasty;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class BookingActivity extends AppCompatActivity {
 
     LocalBroadcastManager localBroadcastManager;
-    AlertDialog dialog;
+    SweetAlertDialog dialog;
     CollectionReference barberRef;
 
     @BindView(R.id.step_view)
@@ -59,7 +61,7 @@ public class BookingActivity extends AppCompatActivity {
             Common.step--;
 
             viewPager.setCurrentItem(Common.step);
-            if (Common.step <3)//alwyas enable NEXT when < 3
+            if (Common.step < 3)//alwyas enable NEXT when < 3
             {
                 btn_next_step.setEnabled(true);
                 setColorButton();
@@ -69,24 +71,22 @@ public class BookingActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_next)
     void nextClick() {
-        if (Common.step < 3 || Common.step == 0)
-        {
+        if (Common.step < 3 || Common.step == 0) {
             Common.step++;//increase here
             if (Common.step == 1) //after choose salon
             {
                 if (Common.currentSalon != null)
                     loadBarberBySalon(Common.currentSalon.getSalonId());
 
-            }
-            else if (Common.step == 2)//time slot
+            } else if (Common.step == 2)//time slot
             {
                 if (Common.currentBarber != null)
                     loadTimeSlotOfBarber(Common.currentBarber.getBarberId());
-            }
-            else if (Common.step == 3)//confirm
+            } else if (Common.step == 3)//confirm
             {
-                if (Common.currentTimeSlot != -1 )
-                   confirmBooking();
+                if (Common.currentTimeSlot != -1)
+                    confirmBooking();
+
             }
             viewPager.setCurrentItem(Common.step);
         }
@@ -112,8 +112,8 @@ public class BookingActivity extends AppCompatActivity {
         //now select all barber
 //AllSalon/Ho/Branch/IW9io42puOugPB5do2rj/Barbers
         if (!TextUtils.isEmpty(Common.city)) {
-            Toast.makeText(this, "" + Common.city, Toast.LENGTH_SHORT).show();
-
+            Log.d("CitySelected", "" + Common.city);
+//            Toast.makeText(this, "" + Common.city, Toast.LENGTH_SHORT).show();
             barberRef = FirebaseFirestore.getInstance()
                     .collection("AllSalon")
                     .document(Common.city)
@@ -163,13 +163,18 @@ public class BookingActivity extends AppCompatActivity {
             else if (step == 2)
                 Common.currentBarber = intent.getParcelableExtra(Common.KEY_BARBER_SELECTED);
             else if (step == 3)
-                Common.currentTimeSlot = intent.getIntExtra(Common.KEY_TIME_SLOT,-1);
-
+                Common.currentTimeSlot = intent.getIntExtra(Common.KEY_TIME_SLOT, -1);
             btn_next_step.setEnabled(true);
             setColorButton();
         }
     };
 
+
+//    @Override
+//    public void onBackPressed() {
+//        //super.onBackPressed();
+//        //create a dialog to ask yes no question whether or not the user wants to exit
+//    }
     @Override
     protected void onDestroy() {
         localBroadcastManager.unregisterReceiver(buttonNextReciever);
@@ -182,8 +187,11 @@ public class BookingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_booking);
         ButterKnife.bind(BookingActivity.this);
 
-        dialog = new SpotsDialog.Builder().setContext(this).setTheme(R.style.Custom).setCancelable(false).build();
-
+        dialog = new SweetAlertDialog(this, SweetAlertDialog.PROGRESS_TYPE);
+        dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        dialog.setTitleText("Loading");
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
 
         localBroadcastManager = LocalBroadcastManager.getInstance(this);
         localBroadcastManager.registerReceiver(buttonNextReciever, new IntentFilter(Common.KEY_ENABLE_BUTTON_NEXT));
@@ -239,11 +247,34 @@ public class BookingActivity extends AppCompatActivity {
     private void setupStepView() {
 
         List<String> stepList = new ArrayList<>();
-        stepList.add("Salon");
-        stepList.add("Barber");
+        stepList.add("Department");
+        stepList.add("Doctor");
         stepList.add("Time");
         stepList.add("Confirm");
 
         stepView.setSteps(stepList);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("FragmentA.java","onActivityResult called");
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            fragment.onActivityResult(requestCode, resultCode, data);
+        }
+
+//        if (requestCode == Common.RequestCode.IMPORT && data != null) {
+//            if (resultCode == Activity.RESULT_OK) {
+////                AddInvoiceToDatabase();
+//            } else if (resultCode == Activity.RESULT_CANCELED) {
+//                Toasty.error(this, "Payment failed", Toast.LENGTH_SHORT).show();
+//
+//            } else if (resultCode == Activity.RESULT_FIRST_USER)
+//                Toasty.error(this, "Payment was cancelled by user", Toast.LENGTH_SHORT).show();
+//
+//
+//        }
+
+
     }
 }

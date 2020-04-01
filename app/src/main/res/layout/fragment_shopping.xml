@@ -13,7 +13,7 @@
         android:layout_height="1dp"
         android:background="@android:color/background_dark" />
 
-    <android.support.design.chip.ChipGroup
+    <com.google.android.material.chip.ChipGroup
         android:id="@+id/chip_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
         android:orientation="horizontal"
         android:paddingTop="10dp">
 
-        <android.support.design.chip.Chip
+        <com.google.android.material.chip.Chip
             android:id="@+id/chip_wax"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
             android:textColor="@android:color/black"
             app:chipBackgroundColor="@android:color/holo_orange_dark" />
 
-        <android.support.design.chip.Chip
+        <com.google.android.material.chip.Chip
             android:id="@+id/chip_spray"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
@@ -39,7 +39,7 @@
             android:textColor="@android:color/white"
             app:chipBackgroundColor="@android:color/darker_gray" />
 
-        <android.support.design.chip.Chip
+        <com.google.android.material.chip.Chip
             android:id="@+id/chip_hair_care"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
             android:textColor="@android:color/white"
             app:chipBackgroundColor="@android:color/darker_gray" />
 
-        <android.support.design.chip.Chip
+        <com.google.android.material.chip.Chip
             android:id="@+id/chip_body_care"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
@@ -57,7 +57,7 @@
             android:textColor="@android:color/white"
             app:chipBackgroundColor="@android:color/darker_gray" />
 
-    </android.support.design.chip.ChipGroup>
+    </com.google.android.material.chip.ChipGroup>
 
     <View
         android:layout_width="match_parent"
@@ -65,11 +65,11 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/background_dark" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_items"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

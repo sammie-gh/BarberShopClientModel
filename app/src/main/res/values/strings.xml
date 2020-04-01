@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">barberShop</string>
+    <string name="app_name">Medic App client</string>
     <string name="FACEBOOK_APP_ID">2635310856541389</string>
     <string name="ACCOUNT_KIT_CLIENT_TOKEN">885642d56cb05ac796869652b224f780</string>
 
@@ -9,7 +9,7 @@
 
     <string name="address_bullet">\u2022 Address:</string>
     <string name="time_bullet">\u2022 Time:</string>
-    <string name="stylelist_bullet">\u2022 styleList:</string>
+    <string name="stylelist_bullet">\u2022 Doctor:</string>
     <string name="bullet">\u2022</string>
 
 </resources>
