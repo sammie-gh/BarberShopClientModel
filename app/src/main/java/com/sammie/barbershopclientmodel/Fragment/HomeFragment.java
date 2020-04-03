@@ -1,6 +1,7 @@
 package com.sammie.barbershopclientmodel.Fragment;
 
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,6 +12,8 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,10 +32,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -40,7 +46,6 @@ import com.nex3z.notificationbadge.NotificationBadge;
 import com.sammie.barbershopclientmodel.Adapter.HomeSliderAdapter;
 import com.sammie.barbershopclientmodel.Adapter.LookBookAdapter;
 import com.sammie.barbershopclientmodel.BookingActivity;
-import com.sammie.barbershopclientmodel.CartActivity;
 import com.sammie.barbershopclientmodel.Common.Common;
 import com.sammie.barbershopclientmodel.Database.CartDatabase;
 import com.sammie.barbershopclientmodel.Database.DatabaseUtils;
@@ -51,13 +56,16 @@ import com.sammie.barbershopclientmodel.Interface.ICountItemCartListener;
 import com.sammie.barbershopclientmodel.Interface.ILookBookLoadlistener;
 import com.sammie.barbershopclientmodel.Model.Banner;
 import com.sammie.barbershopclientmodel.Model.BookingInformation;
+import com.sammie.barbershopclientmodel.Model.User;
 import com.sammie.barbershopclientmodel.R;
 import com.sammie.barbershopclientmodel.Service.PicassoImageLoadingService;
 
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -87,6 +95,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     RecyclerView recyclerView_look_book;
     @BindView(R.id.card_booking_info)
     CardView card_booking_info;
+
     @BindView(R.id.txt_time)
     TextView txt_time;
     @BindView(R.id.txt_salon_address)
@@ -115,9 +124,11 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     IBannerLoadListener iBannerLoadListener;
     ILookBookLoadlistener iLookBookLoadlistener;
     IBookingInfoLoadListener iBookingInfoLoadListener;
-    IBookingInformationChangeListener iBookingInformationChangeListener;
+    private IBookingInformationChangeListener iBookingInformationChangeListener;
     private FirebaseAuth mAuth;
     private Unbinder unbinder;
+    CollectionReference userRef;
+    private BottomSheetDialog bottomSheetDialog;
 
     public HomeFragment() {
         bannerRef = FirebaseFirestore.getInstance().collection("Banner");
@@ -171,6 +182,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
         if (Common.currentBooking != null) {
             if (!dialog.isShowing())
+                dialog.setTitle("Deleting");
                 dialog.show();
 
             //AllSalon/Ho/Branch/IW9io42puOugPB5do2rj/Barbers/H1fXpNpzFt0FH28mUpTr/29_03_2020
@@ -261,11 +273,159 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         startActivity(new Intent(getActivity(), BookingActivity.class));
     }
 
-    @OnClick(R.id.card_view_cart)
-    void openCartActivity() {
-        startActivity(new Intent(getActivity(), CartActivity.class));
+    @OnClick(R.id.card_view_profile)
+    void openProfileUpdate() {
+        if (!dialog.isShowing()) {
+            dialog.show();
+        }
+        //init
+        userRef = FirebaseFirestore.getInstance().collection("Users");
+
+        if (mAuth.getCurrentUser() != null) {
+            DocumentReference currentUser = userRef.document(mAuth.getUid().toString());
+            currentUser.get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()) {
+                                DocumentSnapshot userSnapShot = task.getResult();
+                                if (userSnapShot.exists()) {
+                                    if (dialog.isShowing()) {
+                                        dialog.dismiss();
+                                    }
+                                    showUpdateDialog(mAuth.getUid());
+//                                                    bottomNavigationView.setEnabled(false);
+                                }
+
+                            }
+                        }
+                    });
+
+        }
+
+
     }
 
+    private void showUpdateDialog(final String uid) {
+        bottomSheetDialog = new BottomSheetDialog(getContext());
+        bottomSheetDialog.setCancelable(true);
+        bottomSheetDialog.setTitle("Kindly update your information");
+        bottomSheetDialog.setCanceledOnTouchOutside(true);
+        View sheetView = getLayoutInflater().inflate(R.layout.layout_update_info, null);
+
+        Button btn_update = sheetView.findViewById(R.id.btn_update);
+        final Calendar myCalendar = Calendar.getInstance();
+
+        final TextInputEditText edt_name = sheetView.findViewById(R.id.edt_name);
+        final TextInputEditText edt_address = sheetView.findViewById(R.id.edt_address);
+        final TextInputEditText edt_gender = sheetView.findViewById(R.id.edt_gender);
+        final TextInputEditText edt_next_kin = sheetView.findViewById(R.id.edt_next_kin);
+        final TextInputEditText edt_phone = sheetView.findViewById(R.id.edt_phone);
+        final TextInputEditText edt_date_birth = sheetView.findViewById(R.id.edt_date_birth);
+        final TextInputEditText txtAge = sheetView.findViewById(R.id.txt_age);
+
+        //get previous client information
+        edt_name.setText(Common.currentUser.getName());
+        edt_address.setText(Common.currentUser.getAddress());
+        edt_gender.setText(Common.currentUser.getGender());
+        edt_next_kin.setText(Common.currentUser.getNxtKin());
+        edt_phone.setText(Common.currentUser.getPhoneNumber());
+        edt_date_birth.setText(Common.currentUser.getdOb());
+        txtAge.setText(Common.currentUser.getAge());
+
+
+        //Date picker dialog
+        final DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                //update textView
+                String myFormat = "dd/MM/yy"; //In which you need put here
+                SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.ENGLISH);
+                edt_date_birth.setText(sdf.format(myCalendar.getTime()));
+                edt_date_birth.setTextColor(getResources().getColor(R.color.gray_btn_bg_color));
+                txtAge.setText("Your age is " + getAge(year, monthOfYear, dayOfMonth));
+
+
+            }
+
+        };
+
+        edt_date_birth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new DatePickerDialog(getActivity(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+
+            }
+        });
+
+        btn_update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!dialog.isShowing()) {
+                    dialog.show();
+                }
+//                Random r = new Random();
+//                int randomNumber = r.nextInt();
+
+                final User user = new User(edt_name.getText().toString().trim(),
+                        edt_phone.getText().toString().trim(),// must change to uid in database and user class and other places since token is given here
+                        edt_address.getText().toString(),
+                        edt_next_kin.getText().toString().trim(),
+                        edt_gender.getText().toString().trim(),
+                        txtAge.getText().toString().trim()
+                                .replace("Your age is ", ""),
+                        edt_date_birth.getText().toString().trim(),
+                        "GHS" + Common.currentUser.getIdNumber()
+                );
+
+
+                userRef.document(uid) //was previously uid as phone
+                        .set(user)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                bottomSheetDialog.dismiss();
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                Toasty.success(getActivity(), "Profile updated Thank you ", Toast.LENGTH_SHORT).show();
+                                //load new
+//                                fragment = new HomeFragment();
+//                                loafFragment(fragment);
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        bottomSheetDialog.dismiss();
+                        if (dialog.isShowing())
+                            dialog.dismiss();
+
+                        Common.currentUser = user;
+//                        fragment = new HomeFragment();
+//                        loafFragment(fragment);
+//                        bottomNavigationView.setSelectedItemId(R.id.home_action);
+                        Toasty.error(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        });
+
+        bottomSheetDialog.setContentView(sheetView);
+        bottomSheetDialog.show();
+    }
 
     @Override
     public void onResume() {
@@ -532,5 +692,24 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     @Override
     public void onCartItemCountSuccess(int count) {
         notificationBadge.setText(String.valueOf(count));
+    }
+
+
+    private String getAge(int year, int month, int day) {
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        String ageS = ageInt.toString();
+
+        return ageS;
     }
 }

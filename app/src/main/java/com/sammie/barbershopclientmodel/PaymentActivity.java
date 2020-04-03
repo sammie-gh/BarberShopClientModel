@@ -92,7 +92,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         dialog = new SweetAlertDialog(context, SweetAlertDialog.PROGRESS_TYPE);
         dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        dialog.setTitleText("Loading");
+        dialog.setTitleText("Booking your appointment please wait");
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
 
@@ -123,7 +123,7 @@ public class PaymentActivity extends AppCompatActivity {
 //        Intent intent = new Intent(PaymentActivity.this, PaymentActivity.class);
 //        startActivityForResult(intent, RequestCode.IMPORT);
         PayWithSlydepay.Pay(PaymentActivity.this, "Payment for room",
-                3,
+                5,
                 "Payment made for booking " + Common.currentUser.getName() + " tel: " + Common.currentUser.getPhoneNumber(),
                 Common.currentUser.getName(),
                 "", "121", "", RequestCode.IMPORT);
@@ -253,6 +253,8 @@ public class PaymentActivity extends AppCompatActivity {
         bookingInformation.setTime(new StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
                 .append(" at ")
                 .append(simpleDateFormat.format(bookingDateWithhourHouse.getTime())).toString());
+        bookingInformation.setCustomer_id(Common.currentUser.getIdNumber());
+        bookingInformation.setGender(Common.currentUser.getGender());
 
         //submit to babrber documment
         DocumentReference bookingDate = FirebaseFirestore.getInstance()

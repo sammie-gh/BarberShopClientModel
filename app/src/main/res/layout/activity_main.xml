@@ -39,6 +39,8 @@
         android:background="@drawable/googlesigninbtn"
         android:drawableStart="@drawable/googlelogo"
         android:text="SignUP"
+        android:drawableEnd="@drawable/googlelogo"
+        android:fontFamily="@font/roboto_light"
         android:textColor="@android:color/white"
         android:textSize="22sp" />
 

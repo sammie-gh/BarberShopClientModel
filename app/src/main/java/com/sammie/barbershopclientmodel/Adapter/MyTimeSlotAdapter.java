@@ -93,12 +93,13 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
                 }
 
                 //our selected card will change color
-                myViewHolder.card_time_slot.setCardBackgroundColor(context.getResources()
-                        .getColor(android.R.color.holo_orange_dark));
-            //AFter send broadcast to enable btn next
+                myViewHolder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.holo_green_dark));
+                myViewHolder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.white));
+                myViewHolder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.white));
+                //AFter send broadcast to enable btn next
                 Intent intent = new Intent(Common.KEY_ENABLE_BUTTON_NEXT);
-                intent.putExtra(Common.KEY_TIME_SLOT,i);  // put index of time slot we have selected
-                intent.putExtra(Common.KEY_STEP,3); // go to step 3
+                intent.putExtra(Common.KEY_TIME_SLOT, i);  // put index of time slot we have selected
+                intent.putExtra(Common.KEY_STEP, 3); // go to step 3
                 localBroadcastManager.sendBroadcast(intent);
 
             }

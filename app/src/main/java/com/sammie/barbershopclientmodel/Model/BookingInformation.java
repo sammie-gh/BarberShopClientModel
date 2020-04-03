@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp;
 
 public class BookingInformation {
   private   String cityBook,customerName,customerPhone,time,barberId,
-          barberName,salonId,salonName,salonAddress;
+          barberName,salonId,salonName,salonAddress,customer_id,gender;
   private Long slot;
   private com.google.firebase.Timestamp timestamp;
   private boolean done;
@@ -12,111 +12,132 @@ public class BookingInformation {
     public BookingInformation() {
     }
 
-    public BookingInformation(String customerName, String customerPhone, String time, String barberId, String barberName, String salonId, String salonName, String salonAddress, Long slot) {
-        this.customerName = customerName;
-        this.customerPhone = customerPhone;
-        this.time = time;
-        this.barberId = barberId;
-        this.barberName = barberName;
-        this.salonId = salonId;
-        this.salonName = salonName;
-        this.salonAddress = salonAddress;
-        this.slot = slot;
-    }
+  public BookingInformation(String cityBook, String customerName, String customerPhone, String time, String barberId, String barberName, String salonId, String salonName, String salonAddress, String customer_id, String gender, Long slot, Timestamp timestamp, boolean done) {
+    this.cityBook = cityBook;
+    this.customerName = customerName;
+    this.customerPhone = customerPhone;
+    this.time = time;
+    this.barberId = barberId;
+    this.barberName = barberName;
+    this.salonId = salonId;
+    this.salonName = salonName;
+    this.salonAddress = salonAddress;
+    this.customer_id = customer_id;
+    this.gender = gender;
+    this.slot = slot;
+    this.timestamp = timestamp;
+    this.done = done;
+  }
 
-    public String getCustomerName() {
-        return customerName;
-    }
+  public String getCityBook() {
+    return cityBook;
+  }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
+  public void setCityBook(String cityBook) {
+    this.cityBook = cityBook;
+  }
 
-    public String getCustomerPhone() {
-        return customerPhone;
-    }
+  public String getCustomerName() {
+    return customerName;
+  }
 
-    public void setCustomerPhone(String customerPhone) {
-        this.customerPhone = customerPhone;
-    }
+  public void setCustomerName(String customerName) {
+    this.customerName = customerName;
+  }
 
-    public String getTime() {
-        return time;
-    }
+  public String getGender() {
+    return gender;
+  }
 
-    public void setTime(String time) {
-        this.time = time;
-    }
+  public void setGender(String gender) {
+    this.gender = gender;
+  }
 
-    public String getBarberId() {
-        return barberId;
-    }
+  public String getCustomerPhone() {
+    return customerPhone;
+  }
 
-    public void setBarberId(String barberId) {
-        this.barberId = barberId;
-    }
+  public void setCustomerPhone(String customerPhone) {
+    this.customerPhone = customerPhone;
+  }
 
-    public String getBarberName() {
-        return barberName;
-    }
+  public String getTime() {
+    return time;
+  }
 
-    public void setBarberName(String barberName) {
-        this.barberName = barberName;
-    }
+  public void setTime(String time) {
+    this.time = time;
+  }
 
-    public String getSalonId() {
-        return salonId;
-    }
+  public String getBarberId() {
+    return barberId;
+  }
 
-    public void setSalonId(String salonId) {
-        this.salonId = salonId;
-    }
+  public void setBarberId(String barberId) {
+    this.barberId = barberId;
+  }
 
-    public String getSalonName() {
-        return salonName;
-    }
+  public String getBarberName() {
+    return barberName;
+  }
 
-    public void setSalonName(String salonName) {
-        this.salonName = salonName;
-    }
+  public void setBarberName(String barberName) {
+    this.barberName = barberName;
+  }
 
-    public String getSalonAddress() {
-        return salonAddress;
-    }
+  public String getSalonId() {
+    return salonId;
+  }
 
-    public void setSalonAddress(String salonAddress) {
-        this.salonAddress = salonAddress;
-    }
+  public void setSalonId(String salonId) {
+    this.salonId = salonId;
+  }
 
-    public Long getSlot() {
-        return slot;
-    }
+  public String getSalonName() {
+    return salonName;
+  }
 
-    public void setSlot(Long slot) {
-        this.slot = slot;
-    }
+  public void setSalonName(String salonName) {
+    this.salonName = salonName;
+  }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
+  public String getSalonAddress() {
+    return salonAddress;
+  }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-    }
+  public void setSalonAddress(String salonAddress) {
+    this.salonAddress = salonAddress;
+  }
 
-    public boolean isDone() {
-        return done;
-    }
+  public String getCustomer_id() {
+    return customer_id;
+  }
 
-    public void setDone(boolean done) {
-        this.done = done;
-    }
+  public void setCustomer_id(String customer_id) {
+    this.customer_id = customer_id;
+  }
 
-    public String getCityBook() {
-        return cityBook;
-    }
+  public Long getSlot() {
+    return slot;
+  }
 
-    public void setCityBook(String cityBook) {
-        this.cityBook = cityBook;
-    }
+  public void setSlot(Long slot) {
+    this.slot = slot;
+  }
+
+  public Timestamp getTimestamp() {
+    return timestamp;
+  }
+
+  public void setTimestamp(Timestamp timestamp) {
+    this.timestamp = timestamp;
+  }
+
+  public boolean isDone() {
+    return done;
+  }
+
+  public void setDone(boolean done) {
+    this.done = done;
+  }
 }

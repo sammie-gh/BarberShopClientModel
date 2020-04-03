@@ -253,7 +253,7 @@ public class HomeActivity extends AppCompatActivity {
                     dialog.show();
                 }
                 Random r = new Random();
-                int randomNumber = r.nextInt(8);
+                int randomNumber = r.nextInt();
 
                 final User user = new User(edt_name.getText().toString().trim(),
                         edt_phone.getText().toString().trim(),// must change to uid in database and user class and other places since token is given here

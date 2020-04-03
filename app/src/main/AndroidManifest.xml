@@ -25,9 +25,13 @@
         </service>
 
         <activity android:name=".CartActivity" />
-        <activity android:name=".BookingActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".HomeActivity" />
+        <activity
+            android:name=".BookingActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".HomeActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.facebook.accountkit.ApplicationName"
@@ -39,7 +43,7 @@
             android:name="com.facebook.accountkit.ClientToken"
             android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
 
-        <activity android:name="com.facebook.accountkit.ui.AccountKitActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

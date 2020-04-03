@@ -75,9 +75,7 @@ public class BookingStep4Fragment extends Fragment {
     private SweetAlertDialog dialog;
     private SimpleDateFormat simpleDateFormat;
     private LocalBroadcastManager localBroadcastManager;
-    private Context context;
     Activity activity;
-
     @BindView(R.id.txt_booking_barber_text)
     TextView txt_booking_barber_text;
     Unbinder unbinder;
@@ -146,8 +144,6 @@ public class BookingStep4Fragment extends Fragment {
     }
 
 
-
-
     private void confirmBookingMethod() {
         //create booking information
         //process Timestamp
@@ -180,8 +176,10 @@ public class BookingStep4Fragment extends Fragment {
         bookingInformation.setSalonId(Common.currentSalon.getSalonId());
         bookingInformation.setSlot(Long.valueOf(Common.currentTimeSlot));
         bookingInformation.setTime(new StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
-                .append(" at ")
+                .append(" on ")
                 .append(simpleDateFormat.format(bookingDateWithhourHouse.getTime())).toString());
+        bookingInformation.setCustomer_id(Common.currentUser.getIdNumber());
+        bookingInformation.setCustomer_id(Common.currentUser.getGender());
 
         //submit to babrber documment
         DocumentReference bookingDate = FirebaseFirestore.getInstance()
@@ -206,7 +204,7 @@ public class BookingStep4Fragment extends Fragment {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toasty.success(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toasty.success(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -512,7 +510,7 @@ public class BookingStep4Fragment extends Fragment {
 
         dialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
         dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        dialog.setTitleText("Loading");
+        dialog.setTitleText("Booking please wait");
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
 

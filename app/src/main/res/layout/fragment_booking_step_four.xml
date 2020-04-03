@@ -228,7 +228,7 @@
             android:layout_marginTop="8dp"
             android:background="@color/colorButton"
             android:fontFamily="@font/bellerose"
-            android:text="Poceed to payment"
+            android:text="Proceed to payment"
             android:textColor="@android:color/white" />
 
     </LinearLayout>
