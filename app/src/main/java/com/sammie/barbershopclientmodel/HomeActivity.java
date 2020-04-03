@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -118,8 +119,10 @@ public class HomeActivity extends AppCompatActivity {
 //                        Toasty.error(HomeActivity.this, "" + accountKitError.getErrorType().getMessage(), Toast.LENGTH_SHORT).show();
 //                    }
 //                });
-                if (mAuth.getCurrentUser() != null) {
-                    DocumentReference currentUser = userRef.document(mAuth.getUid().toString());
+                //Check if user is exist
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    DocumentReference currentUser = userRef.document(user.getUid());
                     currentUser.get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
@@ -127,7 +130,7 @@ public class HomeActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot userSnapShot = task.getResult();
                                         if (!userSnapShot.exists()) {
-                                            showUpdateDialog(mAuth.getUid().toString());
+                                            showUpdateDialog(user.getUid());
 //                                                    bottomNavigationView.setEnabled(false);
                                         } else {
                                             //user already loggged

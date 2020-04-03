@@ -36,6 +36,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -126,6 +127,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     IBookingInfoLoadListener iBookingInfoLoadListener;
     private IBookingInformationChangeListener iBookingInformationChangeListener;
     private FirebaseAuth mAuth;
+    private FirebaseUser user;
     private Unbinder unbinder;
     CollectionReference userRef;
     private BottomSheetDialog bottomSheetDialog;
@@ -175,7 +177,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
     private void deleteBookingFromBarber(final boolean isChange) {
 
-        /* to deleet we need to delete from babrber collection
+        /* to deleet we need to delete from barber collection
          * userbooking colletion
          * final event calandar*/
         //we need to load Common.currentBookg coz we need some data from booking infrmation
@@ -183,7 +185,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         if (Common.currentBooking != null) {
             if (!dialog.isShowing())
                 dialog.setTitle("Deleting");
-                dialog.show();
+            dialog.show();
 
             //AllSalon/Ho/Branch/IW9io42puOugPB5do2rj/Barbers/H1fXpNpzFt0FH28mUpTr/29_03_2020
             //AllSalon/Ho/Branch/IW9io42puOugPB5do2rj/Barbers/H1fXpNpzFt0FH28mUpTr/21_05_2019
@@ -281,8 +283,8 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         //init
         userRef = FirebaseFirestore.getInstance().collection("Users");
 
-        if (mAuth.getCurrentUser() != null) {
-            DocumentReference currentUser = userRef.document(mAuth.getUid().toString());
+        if (user != null) {
+            DocumentReference currentUser = userRef.document(user.getUid());
             currentUser.get()
                     .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -293,7 +295,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
                                     if (dialog.isShowing()) {
                                         dialog.dismiss();
                                     }
-                                    showUpdateDialog(mAuth.getUid());
+                                    showUpdateDialog(user.getUid());
 //                                                    bottomNavigationView.setEnabled(false);
                                 }
 
@@ -385,7 +387,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
                         txtAge.getText().toString().trim()
                                 .replace("Your age is ", ""),
                         edt_date_birth.getText().toString().trim(),
-                        "GHS" + Common.currentUser.getIdNumber()
+                        Common.currentUser.getIdNumber()
                 );
 
 
@@ -439,7 +441,6 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
                 .collection("Users")
                 .document(Common.currentUser.getPhoneNumber())
                 .collection("Booking");
-
         //Get current date
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, 0);
@@ -485,8 +486,9 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
-        dialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        dialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         dialog.setTitleText("Loading");
         dialog.setCanceledOnTouchOutside(false);
@@ -512,7 +514,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
 
         //checked if logged
-        if (mAuth.getCurrentUser() != null) {
+        if (user!= null) {
             setUserInformation();
             loadBanner();
             loadLookBook();

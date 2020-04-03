@@ -189,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
 //                ButterKnife.bind(MainActivity.this);
 
                 if (mAuth.getCurrentUser() != null) {
-
                     //get Token
                     FirebaseInstanceId.getInstance().getInstanceId()
                             .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
