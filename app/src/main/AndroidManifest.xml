@@ -16,7 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".PaymentActivity"></activity>
+        <activity
+            android:name=".HistoryActivity"
+            android:label="History">
+
+        </activity>
+        <activity android:name=".PaymentActivity" />
 
         <service android:name=".Service.MyFCMService">
             <intent-filter>
@@ -42,7 +47,6 @@
         <meta-data
             android:name="com.facebook.accountkit.ClientToken"
             android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
-
 
         <activity android:name=".MainActivity">
             <intent-filter>

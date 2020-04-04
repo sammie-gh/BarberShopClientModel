@@ -341,6 +341,7 @@
                 android:layout_gravity="bottom"
                 android:gravity="center|bottom"
                 android:orientation="horizontal"
+                android:layout_marginBottom="2dp"
                 android:weightSum="4">
 
                 <androidx.cardview.widget.CardView

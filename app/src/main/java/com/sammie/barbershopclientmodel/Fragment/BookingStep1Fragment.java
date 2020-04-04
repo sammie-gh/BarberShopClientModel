@@ -40,22 +40,23 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class BookingStep1Fragment extends Fragment implements IAllSalonLoadListener, IBranchLoadListener {
 
     //variable
-    CollectionReference allSalonRef;
-    CollectionReference branchRef;
+    private CollectionReference allSalonRef;
+    private CollectionReference branchRef;
 
-    IAllSalonLoadListener iAllSalonLoadListener;
-    IBranchLoadListener iBranchLoadListener;
+    private IAllSalonLoadListener iAllSalonLoadListener;
+    private IBranchLoadListener iBranchLoadListener;
 
     @BindView(R.id.spinner)
     MaterialSpinner spinner;
+
     @BindView(R.id.recycler_salon)
     RecyclerView recycler_salon;
 
-    SweetAlertDialog alertDialog;
+    private SweetAlertDialog alertDialog;
     Unbinder unbinder;
 
 
-    static BookingStep1Fragment instance;
+    private static BookingStep1Fragment instance;
 
     public static BookingStep1Fragment getInstance() {
 

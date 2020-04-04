@@ -1,12 +1,10 @@
 package com.sammie.barbershopclientmodel.Fragment;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
@@ -23,7 +21,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -37,6 +34,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.sammie.barbershopclientmodel.Common.Common;
+import com.sammie.barbershopclientmodel.EventBus.ConfirmBookingEvent;
 import com.sammie.barbershopclientmodel.Model.BookingInformation;
 import com.sammie.barbershopclientmodel.Model.FCMResponse;
 import com.sammie.barbershopclientmodel.Model.FCMSendData;
@@ -46,6 +44,10 @@ import com.sammie.barbershopclientmodel.PaymentActivity;
 import com.sammie.barbershopclientmodel.R;
 import com.sammie.barbershopclientmodel.Retrofit.IFCMApi;
 import com.sammie.barbershopclientmodel.Retrofit.RetrofitClient;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -74,7 +76,7 @@ public class BookingStep4Fragment extends Fragment {
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private SweetAlertDialog dialog;
     private SimpleDateFormat simpleDateFormat;
-    private LocalBroadcastManager localBroadcastManager;
+
     Activity activity;
     @BindView(R.id.txt_booking_barber_text)
     TextView txt_booking_barber_text;
@@ -174,6 +176,7 @@ public class BookingStep4Fragment extends Fragment {
         bookingInformation.setCustomerPhone(Common.currentUser.getPhoneNumber());
         bookingInformation.setSalonAddress(Common.currentSalon.getAddress());
         bookingInformation.setSalonId(Common.currentSalon.getSalonId());
+        bookingInformation.setSalonName(Common.currentSalon.getName()); //Name
         bookingInformation.setSlot(Long.valueOf(Common.currentTimeSlot));
         bookingInformation.setTime(new StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
                 .append(" on ")
@@ -467,12 +470,43 @@ public class BookingStep4Fragment extends Fragment {
 
     }
 
-    private BroadcastReceiver confirmBookingReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
+//    private BroadcastReceiver confirmBookingReceiver = new BroadcastReceiver() {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            setData();
+//        }
+//    };
+
+    ///////////////////////////////////////
+    // EVENT BUS
+
+    //////////////////////////////////////
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        compositeDisposable.clear();
+        super.onDestroy();
+    }
+
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void setDataBooking(ConfirmBookingEvent event) {
+        if (event.isConfirm()) {
             setData();
         }
-    };
+    }
 
     private void setData() {
         txt_booking_barber_text.setText(Common.currentBarber.getName());
@@ -505,10 +539,8 @@ public class BookingStep4Fragment extends Fragment {
 
         //apply format for date display confirm
         simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        localBroadcastManager = LocalBroadcastManager.getInstance(getContext());
-        localBroadcastManager.registerReceiver(confirmBookingReceiver, new IntentFilter(Common.KEY_CONFIRM_BOOKING));
 
-        dialog = new SweetAlertDialog(getContext(), SweetAlertDialog.PROGRESS_TYPE);
+        dialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.PROGRESS_TYPE);
         dialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         dialog.setTitleText("Booking please wait");
         dialog.setCanceledOnTouchOutside(false);
@@ -526,13 +558,6 @@ public class BookingStep4Fragment extends Fragment {
         unbinder = ButterKnife.bind(this, itemView);
         return itemView;
 
-    }
-
-    @Override
-    public void onDestroy() {
-        localBroadcastManager.unregisterReceiver(confirmBookingReceiver);
-        compositeDisposable.clear();
-        super.onDestroy();
     }
 
 

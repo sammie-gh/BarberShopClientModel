@@ -50,6 +50,7 @@ import com.sammie.barbershopclientmodel.BookingActivity;
 import com.sammie.barbershopclientmodel.Common.Common;
 import com.sammie.barbershopclientmodel.Database.CartDatabase;
 import com.sammie.barbershopclientmodel.Database.DatabaseUtils;
+import com.sammie.barbershopclientmodel.HistoryActivity;
 import com.sammie.barbershopclientmodel.Interface.IBannerLoadListener;
 import com.sammie.barbershopclientmodel.Interface.IBookingInfoLoadListener;
 import com.sammie.barbershopclientmodel.Interface.IBookingInformationChangeListener;
@@ -275,6 +276,11 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         startActivity(new Intent(getActivity(), BookingActivity.class));
     }
 
+    @OnClick(R.id.card_View_history)
+    void openHistoryActivity() {
+        startActivity(new Intent(getActivity(), HistoryActivity.class));
+    }
+
     @OnClick(R.id.card_view_profile)
     void openProfileUpdate() {
         if (!dialog.isShowing()) {
@@ -304,7 +310,6 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
                     });
 
         }
-
 
     }
 

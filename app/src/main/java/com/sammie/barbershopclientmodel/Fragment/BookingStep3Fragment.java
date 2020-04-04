@@ -1,9 +1,5 @@
 package com.sammie.barbershopclientmodel.Fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -32,9 +28,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.sammie.barbershopclientmodel.Adapter.MyTimeSlotAdapter;
 import com.sammie.barbershopclientmodel.Common.Common;
 import com.sammie.barbershopclientmodel.Common.SpacesItemDecoration;
+import com.sammie.barbershopclientmodel.EventBus.DisplayTimeSlotEvent;
 import com.sammie.barbershopclientmodel.Interface.ITimeSlotLoadListener;
 import com.sammie.barbershopclientmodel.Model.TimeSlot;
 import com.sammie.barbershopclientmodel.R;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -69,15 +70,35 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
 //    HorizontalCalendarView calendarView;
 //    private SimpleDateFormat simpleDateFormat;
 
-    private BroadcastReceiver displayTimeSlot = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
+
+
+    //EVENT  bus start
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void loadAllTimeSlotAvailable(DisplayTimeSlotEvent event) {
+
+        // in booking ac. we have pass this event with isDisplay = true
+        if (event.isDisplay()) {
             Calendar date = Calendar.getInstance();
             date.add(Calendar.DATE, 0); //add current date
             loadAvailableTimeSlotofBarber(Common.currentBarber.getBarberId(),
                     simpleDateFormat.format(date.getTime()));
         }
-    };
+
+    }
+
 
     private void loadAvailableTimeSlotofBarber(String barberId, final String bookDate) {
         dialog.show();
@@ -157,8 +178,6 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
         super.onCreate(savedInstanceState);
 
         iTimeSlotLoadListener = this;
-        localBroadcastManager = LocalBroadcastManager.getInstance(getContext());
-        localBroadcastManager.registerReceiver(displayTimeSlot, new IntentFilter(Common.KEY_DISPLAY_TIME_SLOT));
 
         simpleDateFormat = new SimpleDateFormat("dd_MM_yyyy");// this is a key
 
@@ -174,12 +193,7 @@ public class BookingStep3Fragment extends Fragment implements ITimeSlotLoadListe
 
     }
 
-    @Override
-    public void onDestroy() {
-        localBroadcastManager.unregisterReceiver(displayTimeSlot);
-        super.onDestroy();
 
-    }
 
     @Nullable
     @Override

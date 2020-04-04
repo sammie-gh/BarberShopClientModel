@@ -44,6 +44,8 @@ import com.sammie.barbershopclientmodel.Model.MyToken;
 import com.sammie.barbershopclientmodel.Retrofit.IFCMApi;
 import com.sammie.barbershopclientmodel.Retrofit.RetrofitClient;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -421,7 +423,6 @@ public class PaymentActivity extends AppCompatActivity {
                 });
     }
 
-
     private void addToCalender(Calendar bookingDate, String startDate) {
 
         String startTime = Common.convertTimeSlotToString(Common.currentTimeSlot);
@@ -542,6 +543,14 @@ public class PaymentActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         compositeDisposable.clear();
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 }

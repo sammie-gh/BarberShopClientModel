@@ -3,7 +3,7 @@ package com.sammie.barbershopclientmodel.Model;
 import com.google.firebase.Timestamp;
 
 public class BookingInformation {
-  private   String cityBook,customerName,customerPhone,time,barberId,
+  private String cityBook,customerName,customerPhone,time,barberId,
           barberName,salonId,salonName,salonAddress,customer_id,gender;
   private Long slot;
   private com.google.firebase.Timestamp timestamp;

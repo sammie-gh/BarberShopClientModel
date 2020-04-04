@@ -1,7 +1,6 @@
 package com.sammie.barbershopclientmodel.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,35 +8,36 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.sammie.barbershopclientmodel.Common.Common;
+import com.sammie.barbershopclientmodel.EventBus.EnableNextButton;
 import com.sammie.barbershopclientmodel.Interface.IRecyclerItemSelectedListener;
 import com.sammie.barbershopclientmodel.Model.TimeSlot;
 import com.sammie.barbershopclientmodel.R;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.MyViewHolder> {
 
-    Context context;
-    List<TimeSlot> timeSlotList;
-    List<CardView> cardViewList;
-    LocalBroadcastManager localBroadcastManager;
+    private Context context;
+    private List<TimeSlot> timeSlotList;
+    private List<CardView> cardViewList;
+    //LocalBroadcastManager localBroadcastManager;
 
     public MyTimeSlotAdapter(Context context) {
         this.context = context;
         this.timeSlotList = new ArrayList<>();
-        this.localBroadcastManager = LocalBroadcastManager.getInstance(context);
         cardViewList = new ArrayList<>();
     }
 
     public MyTimeSlotAdapter(Context context, List<TimeSlot> timeSlotList) {
         this.context = context;
         this.timeSlotList = timeSlotList;
-        this.localBroadcastManager = LocalBroadcastManager.getInstance(context);
+
         cardViewList = new ArrayList<>();
     }
 
@@ -51,27 +51,26 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder myViewHolder, final int i) {
-
-
         myViewHolder.txt_time_slot.setText(new StringBuilder(Common.convertTimeSlotToString(i)).toString());
         if (timeSlotList.size() == 0) //if all position is avail just show list
         {
+            //if all time slot is empty all card is enable
+            myViewHolder.card_time_slot.setEnabled(true);
             myViewHolder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.white));
             myViewHolder.txt_time_slot_description.setText("Available");
             myViewHolder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.black));
-
             myViewHolder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.black));
 
 
-        } else {
+        } else { // if pos is booked
             for (TimeSlot slotValue : timeSlotList) {
                 //loop all time  slot from server and set different color
                 int slot = Integer.parseInt(slotValue.getSlot().toString());
                 if (slot == i) //if slot == position
                 {
+                    myViewHolder.card_time_slot.setEnabled(false);
                     myViewHolder.card_time_slot.setTag(Common.DISABLE_TAG);
-                    myViewHolder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.darker_gray));
-
+                    myViewHolder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.holo_red_light));
                     myViewHolder.txt_time_slot_description.setText("BOOKED");
                     myViewHolder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.white));
                     myViewHolder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.white));
@@ -82,25 +81,26 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
 
         if (!cardViewList.contains(myViewHolder.card_time_slot))
             cardViewList.add(myViewHolder.card_time_slot);
-        //check if card time slot is vailble
+
+        //check if card time slot is available
         myViewHolder.setiRecyclerItemSelectedListener(new IRecyclerItemSelectedListener() {
             @Override
             public void onItemSelectedListener(View view, int pos) {
                 // loop all card in card list
                 for (CardView cardView : cardViewList) {
-                    if (cardView.getTag() == null)
-                        cardView.setCardBackgroundColor(context.getResources().getColor(android.R.color.white));
+                    if (cardView.getTag() == null)  //only available card time slot be changed
+                        cardView.setCardBackgroundColor(context.getResources()
+                                .getColor(android.R.color.white));
                 }
 
                 //our selected card will change color
                 myViewHolder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.holo_green_dark));
-                myViewHolder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.white));
-                myViewHolder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.white));
-                //AFter send broadcast to enable btn next
-                Intent intent = new Intent(Common.KEY_ENABLE_BUTTON_NEXT);
-                intent.putExtra(Common.KEY_TIME_SLOT, i);  // put index of time slot we have selected
-                intent.putExtra(Common.KEY_STEP, 3); // go to step 3
-                localBroadcastManager.sendBroadcast(intent);
+//                myViewHolder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.white));
+//                myViewHolder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.white));
+
+
+                //Event Buss
+                EventBus.getDefault().postSticky(new EnableNextButton(3,i));
 
             }
         });
