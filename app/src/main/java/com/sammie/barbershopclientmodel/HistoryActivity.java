@@ -72,7 +72,7 @@ public class HistoryActivity extends AppCompatActivity {
                 .collection("Booking");
 
         //value
-        userBooking.whereEqualTo("done", false) //change to true when confirm is implented
+        userBooking.whereEqualTo("done", true) //change to true when seen by staff i
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnFailureListener(new OnFailureListener() {

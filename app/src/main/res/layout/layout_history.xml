@@ -11,26 +11,67 @@
         android:padding="8dp">
 
         <TextView
-            android:id="@+id/txt_booking_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#EBEBEB"
-            android:fontFamily="@font/bellerose"
-            android:paddingStart="10dp"
-            android:text="01/02/2020"
-            android:textColor="@android:color/black" />
-
-        <TextView
-            android:id="@+id/txt_salon_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/bellerose"
-            android:paddingStart="10dp"
-            android:text="name"
+            android:text="Booking Information"
             android:textAllCaps="true"
             android:textColor="@android:color/black"
+            android:textSize="17sp"
             android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_day" />
+
+            <TextView
+                android:id="@+id/txt_booking_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/bellerose"
+                android:paddingStart="10dp"
+                android:text="01/02/2020"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_health_insurance" />
+
+            <TextView
+                android:id="@+id/txt_salon_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/bellerose"
+                android:paddingStart="10dp"
+                android:text="name"
+                android:textAllCaps="true"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,15 +96,6 @@
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:fontFamily="@font/bellerose"
-            android:text="Booking Information"
-            android:textAllCaps="true"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,18 +105,17 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:src="@drawable/ic_event_note_black_24dp"
-                android:layout_gravity="bottom" />
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_event_note_black_24dp" />
 
             <TextView
+                android:id="@+id/txt_booking_time_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:fontFamily="@font/bellerose"
                 android:text="time"
-                android:textSize="15sp"
-                android:id="@+id/txt_booking_time_text"
-                android:layout_marginStart="4dp"/>
+                android:textSize="15sp" />
 
 
         </LinearLayout>
@@ -97,23 +128,21 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginTop="4dp"
-                android:src="@drawable/ic_consult_doctor"
-                android:layout_gravity="bottom" />
+                android:src="@drawable/ic_consult_doctor" />
 
             <TextView
+                android:id="@+id/txt_booking_barber_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:fontFamily="@font/bellerose"
                 android:text="Evans"
-                android:textSize="15sp"
-                android:id="@+id/txt_booking_barber_text"
-                android:layout_marginStart="4dp"/>
+                android:textSize="15sp" />
 
 
         </LinearLayout>
-
-
 
 
     </LinearLayout>

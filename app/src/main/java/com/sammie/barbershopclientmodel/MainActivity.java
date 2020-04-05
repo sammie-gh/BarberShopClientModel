@@ -112,18 +112,15 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             FirebaseUser user = task.getResult().getUser();
-
                             FirebaseInstanceId.getInstance().getInstanceId()
                                     .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                                         @Override
                                         public void onComplete(@NonNull Task<InstanceIdResult> task) {
                                             if (task.isSuccessful()) {
-                                                Common.updateToken(task.getResult().getToken());
+                                                Common.updateToken(getBaseContext(),task.getResult().getToken());
 
                                                 Log.d("TOKEN", task.getResult().getToken());
-
                                                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                                                 intent.putExtra(Common.IS_LOGIN, true);
 //                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //For login to clear this screen for that did not back this screen
@@ -195,8 +192,7 @@ public class MainActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<InstanceIdResult> task) {
                                     if (task.isSuccessful()) {
-                                        Common.updateToken(task.getResult().getToken());
-
+                                        Common.updateToken(getBaseContext(),task.getResult().getToken());
                                         Log.d("TOKEN", task.getResult().getToken());
 
                                         Intent intent = new Intent(MainActivity.this, HomeActivity.class);

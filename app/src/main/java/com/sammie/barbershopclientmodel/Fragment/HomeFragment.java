@@ -40,7 +40,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.nex3z.notificationbadge.NotificationBadge;
@@ -100,6 +103,8 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
 
     @BindView(R.id.txt_time)
     TextView txt_time;
+    @BindView(R.id.txt_status)
+    TextView txt_status;
     @BindView(R.id.txt_salon_address)
     TextView txt_salon_address;
     @BindView(R.id.txt_salon_barber)
@@ -121,17 +126,21 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     private SweetAlertDialog dialog;
 
     //Firetsore
-    CollectionReference bannerRef, lookBookRef;
+    private CollectionReference bannerRef, lookBookRef;
     //interface
-    IBannerLoadListener iBannerLoadListener;
-    ILookBookLoadlistener iLookBookLoadlistener;
-    IBookingInfoLoadListener iBookingInfoLoadListener;
+    private IBannerLoadListener iBannerLoadListener;
+    private ILookBookLoadlistener iLookBookLoadlistener;
+    private IBookingInfoLoadListener iBookingInfoLoadListener;
+
     private IBookingInformationChangeListener iBookingInformationChangeListener;
     private FirebaseAuth mAuth;
     private FirebaseUser user;
     private Unbinder unbinder;
-    CollectionReference userRef;
+    private CollectionReference userRef;
     private BottomSheetDialog bottomSheetDialog;
+
+    private ListenerRegistration userBookingListener = null;
+    private com.google.firebase.firestore.EventListener<QuerySnapshot> userBookingEvent = null;
 
     public HomeFragment() {
         bannerRef = FirebaseFirestore.getInstance().collection("Banner");
@@ -457,7 +466,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         //select booking information from firebase with dome = false and timestamp greater today
         userBooking
                 .whereGreaterThanOrEqualTo("timestamp", todayTimeStamp)
-                .whereEqualTo("done", false)
+                .whereEqualTo("done", false) //when staff confirms done value is set to true and does not display lookbook to user
                 .limit(1)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -484,6 +493,16 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
             }
         });
 
+        //if userbooking has been assign data collection we will make real time listener
+        if (userBookingEvent != null) {//if userbookingEvent already init
+
+
+            //that mean we just add 1 time
+            if (userBookingListener == null) { // only add if userbooking == null
+                userBookingListener = userBooking.addSnapshotListener(userBookingEvent);
+            }
+
+        }
 
     }
 
@@ -517,17 +536,34 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         iBookingInfoLoadListener = this;
         iBookingInformationChangeListener = this;
 
-
         //checked if logged
-        if (user!= null) {
+        if (user != null) {
             setUserInformation();
             loadBanner();
             loadLookBook();
+            initRealTimeUserBooking();//need to declare above loaduserbooking
             loadUserBooking();
             countCartItem();
         }// add feature to make non log view
 
         return view;
+    }
+
+    private void initRealTimeUserBooking() {
+
+        //inifity loop can cause u money or data quota exceeds
+
+        if (userBookingEvent == null) { // we only init event if event i snull
+            userBookingEvent = new EventListener<QuerySnapshot>() {
+
+                @Override
+                public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                    //in this event when it fired we will call loaduserBooking again
+                    loadUserBooking();
+                }
+            };
+
+        }
     }
 
     private void countCartItem() {
@@ -668,6 +704,14 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         txt_salon_address.setText(bookingInformation.getSalonAddress());
         txt_salon_barber.setText(bookingInformation.getBarberName());
         txt_time.setText(bookingInformation.getTime());
+        txt_status.setText(bookingInformation.getIsConfirm().trim()); //set booking status
+
+        if (txt_status.getText().equals("Booking is not confirmed")) {
+            txt_status.setTextColor(getResources().getColor(R.color.colorstatus_red));
+        } else
+            txt_status.setTextColor(getResources().getColor(R.color.colorstatus_green));
+
+
         String dateRemain = DateUtils.getRelativeTimeSpanString(
                 Long.valueOf(bookingInformation.getTimestamp().toDate().getTime()),
                 Calendar.getInstance().getTimeInMillis(), 0).toString();
@@ -685,7 +729,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     @Override
     public void onBookingInfoLoadFailed(String message) {
 
-        Toasty.error(getContext(), message, Toast.LENGTH_SHORT).show();
+        Toasty.error(getActivity(), message, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -700,7 +744,6 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     public void onCartItemCountSuccess(int count) {
         notificationBadge.setText(String.valueOf(count));
     }
-
 
     private String getAge(int year, int month, int day) {
         Calendar dob = Calendar.getInstance();

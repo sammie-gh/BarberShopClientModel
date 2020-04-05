@@ -40,6 +40,7 @@ import java.util.Random;
 import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import es.dmoral.toasty.Toasty;
+import io.paperdb.Paper;
 
 public class HomeActivity extends AppCompatActivity {
     //    @BindView(R.id.bottom_navigation)
@@ -54,7 +55,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         ButterKnife.bind(HomeActivity.this);
         mAuth = FirebaseAuth.getInstance();
 
@@ -73,7 +73,6 @@ public class HomeActivity extends AppCompatActivity {
             boolean isLogin = getIntent().getBooleanExtra(Common.IS_LOGIN, false);
 
             if (isLogin) {
-
                 if (!isFinishing() && !isDestroyed()) {
                     //copy from Babrber Booking app
                     if (!dialog.isShowing())
@@ -123,6 +122,9 @@ public class HomeActivity extends AppCompatActivity {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 if (user != null) {
                     DocumentReference currentUser = userRef.document(user.getUid());
+                    Paper.init(HomeActivity.this);
+                    Paper.book().write(Common.LOGGED_KEY,user.getUid()).toString(); //change for id login
+
                     currentUser.get()
                             .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                 @Override
@@ -133,7 +135,7 @@ public class HomeActivity extends AppCompatActivity {
                                             showUpdateDialog(user.getUid());
 //                                                    bottomNavigationView.setEnabled(false);
                                         } else {
-                                            //user already loggged
+                                            //user already logged
                                             Common.currentUser = userSnapShot.toObject(User.class);
 //                                                    bottomNavigationView.setSelectedItemId(R.id.home_action);
                                             fragment = new HomeFragment();
@@ -328,8 +330,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (dialog.isShowing())
-            dialog.dismiss();
+
 
     }
 

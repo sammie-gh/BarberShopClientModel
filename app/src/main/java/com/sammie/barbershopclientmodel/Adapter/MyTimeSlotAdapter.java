@@ -97,8 +97,6 @@ public class MyTimeSlotAdapter extends RecyclerView.Adapter<MyTimeSlotAdapter.My
                 myViewHolder.card_time_slot.setCardBackgroundColor(context.getResources().getColor(android.R.color.holo_green_dark));
 //                myViewHolder.txt_time_slot.setTextColor(context.getResources().getColor(android.R.color.white));
 //                myViewHolder.txt_time_slot_description.setTextColor(context.getResources().getColor(android.R.color.white));
-
-
                 //Event Buss
                 EventBus.getDefault().postSticky(new EnableNextButton(3,i));
 

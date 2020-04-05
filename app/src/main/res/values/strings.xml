@@ -10,6 +10,7 @@
     <string name="address_bullet">\u2022 Address:</string>
     <string name="time_bullet">\u2022 Time:</string>
     <string name="stylelist_bullet">\u2022 Doctor:</string>
+    <string name="confirm_bullet">\u2022 Booking Status:</string>
     <string name="bullet">\u2022</string>
 
 </resources>

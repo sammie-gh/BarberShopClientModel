@@ -4,10 +4,12 @@ import com.google.firebase.Timestamp;
 
 public class BookingInformation {
   private String cityBook,customerName,customerPhone,time,barberId,
-          barberName,salonId,salonName,salonAddress,customer_id,gender;
+          barberName,salonId,salonName,salonAddress,customer_id,gender,uid,isConfirm; //can chatge to booking status
   private Long slot;
   private com.google.firebase.Timestamp timestamp;
   private boolean done;
+
+
 
     public BookingInformation() {
     }
@@ -139,5 +141,21 @@ public class BookingInformation {
 
   public void setDone(boolean done) {
     this.done = done;
+  }
+
+  public String getUid() {
+    return uid;
+  }
+
+  public void setUid(String uid) {
+    this.uid = uid;
+  }
+
+  public String getIsConfirm() {
+    return isConfirm;
+  }
+
+  public void setIsConfirm(String isConfirm) {
+    this.isConfirm = isConfirm;
   }
 }

@@ -29,6 +29,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -226,7 +228,7 @@ public class PaymentActivity extends AppCompatActivity {
         //or only display all future booking
 
         dialog.show();
-
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String startTime = Common.convertTimeSlotToString(Common.currentTimeSlot);
         String[] convertTime = startTime.split("-");  //split ex :9:00 -10:00
         //get startime :get 9:00
@@ -245,6 +247,7 @@ public class PaymentActivity extends AppCompatActivity {
         bookingInformation.setCityBook(Common.city);
         bookingInformation.setTimestamp(timestamp);
         bookingInformation.setDone(false);   // always fals coz we will use this  field to filter display
+
         bookingInformation.setBarberId(Common.currentBarber.getBarberId());
         bookingInformation.setBarberName(Common.currentBarber.getName());
         bookingInformation.setCustomerName(Common.currentUser.getName());
@@ -252,11 +255,16 @@ public class PaymentActivity extends AppCompatActivity {
         bookingInformation.setSalonAddress(Common.currentSalon.getAddress());
         bookingInformation.setSalonId(Common.currentSalon.getSalonId());
         bookingInformation.setSlot(Long.valueOf(Common.currentTimeSlot));
+        bookingInformation.setSalonName(Common.currentSalon.getName());
         bookingInformation.setTime(new StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
                 .append(" at ")
                 .append(simpleDateFormat.format(bookingDateWithhourHouse.getTime())).toString());
         bookingInformation.setCustomer_id(Common.currentUser.getIdNumber());
         bookingInformation.setGender(Common.currentUser.getGender());
+        if (user != null) {
+            bookingInformation.setUid(user.getUid());
+        }
+        bookingInformation.setIsConfirm("Booking is not confirmed");
 
         //submit to babrber documment
         DocumentReference bookingDate = FirebaseFirestore.getInstance()
