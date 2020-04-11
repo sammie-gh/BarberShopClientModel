@@ -27,7 +27,8 @@
         android:gravity="center"
         android:text="Payment Powered By SLYDEPAY "
         android:textColor="#FFF"
-        android:textSize="18sp"
+        android:textSize="16sp"
+        android:fontFamily="@font/nunito_sans_bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/img_close"
         app:layout_constraintTop_toTopOf="parent" />
@@ -76,6 +77,7 @@
             android:text="Make Payment"
             android:textAlignment="center"
             android:textColor="#4B4587"
+            android:fontFamily="@font/nunito_sans_semibold"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -87,6 +89,7 @@
             android:lineSpacingExtra="5dp"
             android:text="pay for price "
             android:textAlignment="center"
+            android:fontFamily="@font/nunito_sans_semibold"
             android:textColor="#4B4587"
             android:textSize="16sp" />
 
@@ -100,6 +103,7 @@
             android:text="Proceed"
             android:textColor="#FFF"
             android:textSize="14sp"
+            android:fontFamily="@font/nunito_sans_semibold"
             android:textStyle="bold" />
 
 
@@ -107,6 +111,7 @@
             android:id="@+id/txt_terms_conditions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_sans_semibold"
             android:text="Terms and Conditions"
             android:textColor="@android:color/black"
             android:textSize="16sp" />

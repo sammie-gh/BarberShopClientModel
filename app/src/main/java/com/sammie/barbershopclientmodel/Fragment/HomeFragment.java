@@ -624,7 +624,7 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
     private void setUserInformation() {
         layout_user_info.setVisibility(View.VISIBLE);
         txt_userName.setText(Common.currentUser.getName()); //save to sharedprerence or save instace to prevent crash
-        txt_phone.setText(MessageFormat.format("phone :{0}", Common.currentUser.getPhoneNumber()));
+        txt_phone.setText(MessageFormat.format("PHONE :{0}", Common.currentUser.getPhoneNumber()));
         txt_membership_id_number.setText(MessageFormat.format("ID: {0}", Common.currentUser.getIdNumber()));
 
         img_user.setOnClickListener(new View.OnClickListener() {
@@ -707,9 +707,17 @@ public class HomeFragment extends Fragment implements IBannerLoadListener, ILook
         txt_status.setText(bookingInformation.getIsConfirm().trim()); //set booking status
 
         if (txt_status.getText().equals("Booking is not confirmed")) {
-            txt_status.setTextColor(getResources().getColor(R.color.colorstatus_red));
+            try {
+                txt_status.setTextColor(getResources().getColor(R.color.colorstatus_red));
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
         } else
-            txt_status.setTextColor(getResources().getColor(R.color.colorstatus_green));
+            try {
+                txt_status.setTextColor(getResources().getColor(R.color.colorstatus_green));
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
 
 
         String dateRemain = DateUtils.getRelativeTimeSpanString(

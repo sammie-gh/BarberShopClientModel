@@ -12,5 +12,7 @@
     <string name="stylelist_bullet">\u2022 Doctor:</string>
     <string name="confirm_bullet">\u2022 Booking Status:</string>
     <string name="bullet">\u2022</string>
+    <string name="thank_you_for_booking_our_services">Thank you for booking our services !</string>
+    <string name="booking_information">Booking Information</string>
 
 </resources>

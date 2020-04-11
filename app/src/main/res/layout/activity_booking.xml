@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:enabled="false"
             android:layout_marginStart="4dp"
-            android:fontFamily="@font/bellerose"
+            android:fontFamily="@font/nunito_sans_semibold"
             android:text="Previous" />
 
 
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_next"
             android:layout_marginStart="4dp"
-            android:fontFamily="@font/bellerose"
+            android:fontFamily="@font/nunito_sans_semibold"
             android:text="Next" />
 
 

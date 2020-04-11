@@ -10,6 +10,7 @@
     <com.jaredrummler.materialspinner.MaterialSpinner
         android:layout_width="match_parent"
         android:id="@+id/spinner"
+        android:fontFamily="@font/nunito_sans_semibold"
         android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView

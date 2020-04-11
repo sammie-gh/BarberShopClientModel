@@ -17,7 +17,7 @@
             android:id="@+id/txt_time_slot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/bellerose"
+            android:fontFamily="@font/nunito_sans_bold"
             android:gravity="center_horizontal"
             android:text="9:00 - 9:30"
             android:textSize="12sp"

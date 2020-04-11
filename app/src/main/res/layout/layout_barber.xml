@@ -25,7 +25,7 @@
             android:id="@+id/txt_barber_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/bellerose"
+            android:fontFamily="@font/nunito_sans_semibold"
             android:gravity="center_horizontal"
             android:text="David"
             android:textSize="20sp"

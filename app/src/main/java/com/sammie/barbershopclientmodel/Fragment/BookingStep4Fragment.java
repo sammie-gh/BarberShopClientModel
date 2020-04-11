@@ -27,6 +27,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -159,30 +161,37 @@ public class BookingStep4Fragment extends Fragment {
         int startHourInt = Integer.parseInt(startTimeConvert[0].trim()); // we get 9
         int startMinInt = Integer.parseInt(startTimeConvert[1].trim()); // we get 00
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
         Calendar bookingDateWithhourHouse = Calendar.getInstance();
         bookingDateWithhourHouse.setTimeInMillis(Common.bookingDate.getTimeInMillis());
         bookingDateWithhourHouse.set(Calendar.HOUR_OF_DAY, startHourInt);
         bookingDateWithhourHouse.set(Calendar.MINUTE, startMinInt);
 
-        //create timestamp object and apply to BookingInformation
+//create timestamp object and apply to BookingInformation
         Timestamp timestamp = new Timestamp(bookingDateWithhourHouse.getTime());
         final BookingInformation bookingInformation = new BookingInformation();
         bookingInformation.setCityBook(Common.city);
         bookingInformation.setTimestamp(timestamp);
         bookingInformation.setDone(false);   // always fals coz we will use this  field to filter display
+
         bookingInformation.setBarberId(Common.currentBarber.getBarberId());
         bookingInformation.setBarberName(Common.currentBarber.getName());
         bookingInformation.setCustomerName(Common.currentUser.getName());
         bookingInformation.setCustomerPhone(Common.currentUser.getPhoneNumber());
         bookingInformation.setSalonAddress(Common.currentSalon.getAddress());
         bookingInformation.setSalonId(Common.currentSalon.getSalonId());
-        bookingInformation.setSalonName(Common.currentSalon.getName()); //Name
         bookingInformation.setSlot(Long.valueOf(Common.currentTimeSlot));
+        bookingInformation.setSalonName(Common.currentSalon.getName());
         bookingInformation.setTime(new StringBuilder(Common.convertTimeSlotToString(Common.currentTimeSlot))
-                .append(" on ")
+                .append(" at ")
                 .append(simpleDateFormat.format(bookingDateWithhourHouse.getTime())).toString());
         bookingInformation.setCustomer_id(Common.currentUser.getIdNumber());
-        bookingInformation.setCustomer_id(Common.currentUser.getGender());
+        bookingInformation.setGender(Common.currentUser.getGender());
+        if (user != null) {
+            bookingInformation.setUid(user.getUid());
+        }
+        bookingInformation.setIsConfirm("Booking is not confirmed");
 
         //submit to babrber documment
         DocumentReference bookingDate = FirebaseFirestore.getInstance()

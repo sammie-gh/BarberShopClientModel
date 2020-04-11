@@ -38,6 +38,7 @@
                 android:id="@+id/txt_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fontFamily="@font/nunito_sans_bold"
                 android:text="sammie"
                 android:textColor="@android:color/white"
                 android:textSize="22sp" />
@@ -46,6 +47,7 @@
                 android:id="@+id/txt_phone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fontFamily="@font/nunito_sans_semibold"
                 android:text="7987878"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
@@ -54,6 +56,7 @@
                 android:id="@+id/txt_membership_id_number"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:fontFamily="@font/nunito_sans_semibold"
                 android:text="121212"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
@@ -103,7 +106,7 @@
                     android:id="@+id/txt_book_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:fontFamily="@font/nunito_sans_semibold"
                     android:textColor="@color/colorButton"
                     android:textSize="@dimen/textCardSize" />
 
@@ -167,7 +170,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:fontFamily="@font/bellerose"
+                        android:fontFamily="@font/nunito_sans_bold"
                         android:text="Your booking information"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -195,6 +198,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="Address"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -221,6 +225,7 @@
                         android:layout_marginStart="8dp"
                         android:text="Time"
                         android:textSize="16sp"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         android:textStyle="bold" />
 
 
@@ -247,6 +252,7 @@
                         android:layout_marginStart="8dp"
                         android:text="David"
                         android:textSize="16sp"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         android:textStyle="bold" />
 
 
@@ -272,6 +278,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="Time"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -298,6 +305,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="Status"
+                        android:fontFamily="@font/nunito_sans_semibold"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -393,8 +401,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@color/colorButton"
                             android:layout_gravity="center_horizontal"
-                            android:fontFamily="@font/bellerose"
+                            android:fontFamily="@font/classique_saigon"
                             android:text="@string/booking"
                             android:textSize="@dimen/textCardSize" />
 
@@ -426,8 +435,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:fontFamily="@font/bellerose"
+                            android:fontFamily="@font/classique_saigon"
                             android:text="History"
+                            android:textColor="@color/colorButton"
                             android:textSize="@dimen/textCardSize" />
 
                     </LinearLayout>
@@ -471,7 +481,8 @@
                             android:layout_below="@+id/cart_icon"
                             android:layout_centerHorizontal="true"
                             android:layout_gravity="center_horizontal"
-                            android:fontFamily="@font/bellerose"
+                            android:fontFamily="@font/classique_saigon"
+                            android:textColor="@color/colorButton"
                             android:text="Help"
 
                             android:textSize="@dimen/textCardSize" />
@@ -505,8 +516,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:fontFamily="@font/bellerose"
+                            android:fontFamily="@font/classique_saigon"
                             android:text="Profile"
+                            android:textColor="@color/colorButton"
                             android:textSize="@dimen/textCardSize" />
 
                     </LinearLayout>

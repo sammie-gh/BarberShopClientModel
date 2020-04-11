@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.apps.norris.paywithslydepay.R;
 import com.apps.norris.paywithslydepay.core.PayWithSlydepay;
 import com.apps.norris.paywithslydepay.models.PaymentOption;
-import com.apps.norris.paywithslydepay.views.CustomTextView;
 import com.apps.norris.paywithslydepay.views.MaterialProgressBar;
 
 import java.io.InputStream;
@@ -39,7 +38,7 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter<PaymentOptionsAd
     @Override
     public PaymentOptionsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.payment_options_layout,
-                parent,false);
+                parent, false);
         return new PaymentOptionsAdapter.ViewHolder(itemView);
     }
 
@@ -47,7 +46,7 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter<PaymentOptionsAd
     public void onBindViewHolder(PaymentOptionsAdapter.ViewHolder holder, int position) {
         final PaymentOption getPaymentOption = paymentOptions.get(position);
         holder.name.setText(getPaymentOption.getName());
-        new DownloadImageTask(holder.logo,holder.progressBar).execute(getPaymentOption.getLogoURL());
+        new DownloadImageTask(holder.logo, holder.progressBar).execute(getPaymentOption.getLogoURL());
 
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +70,7 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter<PaymentOptionsAd
 
         ViewHolder(View convertView) {
             super(convertView);
-            name =   convertView.findViewById(R.id.name);
+            name = convertView.findViewById(R.id.name);
             logo = (ImageView) convertView.findViewById(R.id.logo);
             container = (RelativeLayout) convertView.findViewById(R.id.container);
             progressBar = (MaterialProgressBar) convertView.findViewById(R.id.progress_bar);
@@ -82,7 +81,7 @@ public class PaymentOptionsAdapter extends RecyclerView.Adapter<PaymentOptionsAd
         ImageView bmImage;
         MaterialProgressBar progressBar;
 
-        DownloadImageTask(ImageView bmImage,MaterialProgressBar progressBar) {
+        DownloadImageTask(ImageView bmImage, MaterialProgressBar progressBar) {
             this.bmImage = bmImage;
             this.progressBar = progressBar;
         }
